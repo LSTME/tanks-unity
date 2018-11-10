@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(TankManager))]
 public class TankShooting : MonoBehaviour
 {
-    public TankManager tankManager;
     public int m_PlayerNumber = 1; // Used to identify the different players.
     public Rigidbody m_Shell; // Prefab of the shell.
     public Transform m_FireTransform; // A child of the tank where the shells are spawned.
@@ -26,6 +26,12 @@ public class TankShooting : MonoBehaviour
     private float m_ChargeSpeed; // How fast the launch force increases, based on the max charge time.
     private bool m_Fired; // Whether or not the shell has been launched with this button press.
 
+    private TankManager tankManager;
+
+    private void Awake()
+    {
+        tankManager = GetComponent<TankManager>();
+    }
 
     private void OnEnable()
     {

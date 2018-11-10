@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static Color[] playerColors = {Color.blue, Color.red};
+    
     public int m_NumRoundsToWin = 5; // The number of rounds a single player has to win to win the game.
     public float m_StartDelay = 3f; // The delay between the start of RoundStarting and RoundPlaying phases.
     public float m_EndDelay = 3f; // The delay between the end of RoundPlaying and RoundEnding phases.
@@ -14,6 +16,9 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText; // Reference to the overlay Text to display winning text, etc.
     public GameObject m_TankPrefab; // Reference to the prefab the players will control.
     public TankManager[] m_Tanks; // A collection of managers for enabling and disabling different aspects of the tanks.
+
+    public GameObject[]
+        spawnPoints; // A collection of managers for enabling and disabling different aspects of the tanks.
 
     public RoundStatus RoundStatus { get; private set; }
 
@@ -48,14 +53,20 @@ public class GameManager : MonoBehaviour
     private void SpawnAllTanks()
     {
         // For all the tanks...
-        for (int i = 0; i < m_Tanks.Length; i++)
+        for (int i = 0; i < spawnPoints.Length; i++)
         {
             // ... create them, set their player number and references needed for control.
-            m_Tanks[i].m_Instance =
-                Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as
-                    GameObject;
-            m_Tanks[i].m_PlayerNumber = i + 1;
-            m_Tanks[i].Setup();
+            var spawnPoint = spawnPoints[i].transform;
+            var gameObject = Instantiate(m_TankPrefab, spawnPoint.position,
+                spawnPoint.rotation);
+
+            var tankManager = gameObject.GetComponent<TankManager>();
+            tankManager.m_PlayerColor = playerColors[i];
+            tankManager.m_PlayerNumber = i + 1;
+            tankManager.m_SpawnPoint = spawnPoint;
+            tankManager.Setup();
+
+            m_Tanks[i] = tankManager;
         }
     }
 
@@ -69,7 +80,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < targets.Length; i++)
         {
             // ... set it to the appropriate tank transform.
-            targets[i] = m_Tanks[i].m_Instance.transform;
+            targets[i] = m_Tanks[i].transform;
         }
 
         // These are the targets the camera should follow.
@@ -178,7 +189,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_Tanks.Length; i++)
         {
             // ... and if they are active, increment the counter.
-            if (m_Tanks[i].m_Instance.activeSelf)
+            if (m_Tanks[i].gameObject.activeSelf)
                 numTanksLeft++;
         }
 
@@ -195,7 +206,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_Tanks.Length; i++)
         {
             // ... and if one of them is active, it is the winner so return it.
-            if (m_Tanks[i].m_Instance.activeSelf)
+            if (m_Tanks[i].gameObject.activeSelf)
                 return m_Tanks[i];
         }
 

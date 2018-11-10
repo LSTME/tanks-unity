@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
-public class TankManager
+public class TankManager : MonoBehaviour
 {
     public Color m_PlayerColor;            
-    public Transform m_SpawnPoint;         
+    public Transform m_SpawnPoint;
     [HideInInspector] public int m_PlayerNumber;             
     [HideInInspector] public string m_ColoredPlayerText;
-    [HideInInspector] public GameObject m_Instance;          
     [HideInInspector] public int m_Wins;
     public int ammo = 5;
 
@@ -19,17 +17,16 @@ public class TankManager
 
     public void Setup()
     {
-        m_Movement = m_Instance.GetComponent<TankMovement>();
-        m_Shooting = m_Instance.GetComponent<TankShooting>();
-        m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
+        m_Movement = GetComponent<TankMovement>();
+        m_Shooting = GetComponent<TankShooting>();
+        m_CanvasGameObject = GetComponentInChildren<Canvas>().gameObject;
 
         m_Movement.m_PlayerNumber = m_PlayerNumber;
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
-        m_Shooting.tankManager = this;
 
         m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
 
-        MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
+        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
 
         for (int i = 0; i < renderers.Length; i++)
         {
@@ -58,11 +55,11 @@ public class TankManager
 
     public void Reset()
     {
-        m_Instance.transform.position = m_SpawnPoint.position;
-        m_Instance.transform.rotation = m_SpawnPoint.rotation;
+        transform.position = m_SpawnPoint.position;
+        transform.rotation = m_SpawnPoint.rotation;
 
-        m_Instance.SetActive(false);
-        m_Instance.SetActive(true);
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public bool CanShoot()

@@ -72,13 +72,17 @@ public class TankManager : MonoBehaviour
         ammo--;
     }
 
-    public void Pickup(PickupType pickupType)
+    public bool pickup(PickupType pickupType)
     {
         switch (pickupType)
         {
             case PickupType.AMMO:
                 ammo += 5;
-                break;
+                return true;
+            case PickupType.SHIELD:
+                return GetComponent<TankHealth>().activateShield();
         }
+
+        return false;
     }
 }

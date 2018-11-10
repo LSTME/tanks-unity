@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
     public class TankHealth : MonoBehaviour
@@ -9,6 +10,8 @@ using UnityEngine.UI;
         public Color m_FullHealthColor = Color.green;       // The color the health bar will be when on full health.
         public Color m_ZeroHealthColor = Color.red;         // The color the health bar will be when on no health.
         public GameObject m_ExplosionPrefab;                // A prefab that will be instantiated in Awake, then used whenever the tank dies.
+        public GameObject shield;
+        public bool isShieldUp;
         
         
         private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
@@ -29,6 +32,14 @@ using UnityEngine.UI;
             m_ExplosionParticles.gameObject.SetActive (false);
         }
 
+        private IEnumerator Shielding()
+        {
+            shield.SetActive(true);
+            isShieldUp = true;
+            yield return new WaitForSeconds(5.0f);
+            shield.SetActive(false);
+            isShieldUp = false;
+        }
 
         private void OnEnable()
         {
@@ -40,9 +51,22 @@ using UnityEngine.UI;
             SetHealthUI();
         }
 
+        public bool activateShield()
+        {
+            if (isShieldUp)
+                return false;
+            
+            StartCoroutine(Shielding());
+            
+            return true;
+        }
+
 
         public void TakeDamage (float amount)
         {
+            if (isShieldUp)
+                return;
+            
             // Reduce current health by the amount of damage done.
             m_CurrentHealth -= amount;
 

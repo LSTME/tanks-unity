@@ -6,12 +6,11 @@ public class Pickup : MonoBehaviour
 {
     public PickupType pickupType;
     public float PickupRadius = 1.0f;
-    public SphereCollider collider;
     public float respawnDelay = 5.0f;
 
     private void Awake()
     {
-        collider.radius = PickupRadius;
+        GetComponent<SphereCollider>().radius = PickupRadius;
     }
 
     // Update is called once per frame
@@ -27,13 +26,13 @@ public class Pickup : MonoBehaviour
         Gizmos.DrawWireSphere(pickupCollider.transform.position, PickupRadius);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         var tankManager = other.gameObject.GetComponent<TankManager>();
         if (tankManager != null)
         {
-            tankManager.Pickup(pickupType);
-            StartCoroutine(Cooldown());
+            if (tankManager.pickup(pickupType))
+                StartCoroutine(Cooldown());
         }
     }
 
@@ -47,7 +46,6 @@ public class Pickup : MonoBehaviour
     private void toggleActive(bool value)
     {
         gameObject.GetComponent<Collider>().enabled = value;
-//        gameObject.GetComponentInChildren<Renderer>().enabled = value;
         foreach (Transform childTransform in transform)
             childTransform.gameObject.SetActive(value);
     }
@@ -55,5 +53,6 @@ public class Pickup : MonoBehaviour
 
 public enum PickupType
 {
-    AMMO
+    AMMO,
+    SHIELD
 }

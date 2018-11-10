@@ -11,6 +11,11 @@ public class ArmedMine : MonoBehaviour
     public ParticleSystem explosionParticleSystem;
     private AudioSource explosionAudio;
     
+    public AudioSource beepAudio;
+    public Light indicationLight;
+    public Color safeColor = Color.green;
+    public Color activeColor = Color.red;
+    
     public LayerMask triggerMask;
     public bool isActive = false;
 
@@ -24,8 +29,11 @@ public class ArmedMine : MonoBehaviour
 
     private IEnumerator ActivateMine()
     {
-        yield return new WaitForSeconds(2.0f);
-
+        indicationLight.color = safeColor;
+        
+        yield return new WaitForSeconds(1.0f);
+        
+        indicationLight.color = activeColor;
         isActive = true;
     }
 
@@ -37,6 +45,14 @@ public class ArmedMine : MonoBehaviour
         var tankManager = other.gameObject.GetComponent<TankManager>();
         if (tankManager == null)
             return;
+        
+        StartCoroutine(Explode());
+    }
+
+    private IEnumerator Explode()
+    {
+        beepAudio.Play();
+        yield return new WaitForSeconds(0.2f);
         
         // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, triggerMask);
@@ -64,7 +80,7 @@ public class ArmedMine : MonoBehaviour
             // Deal this damage to the tank.
             targetHealth.TakeDamage(explosionDamage);
         }
-        
+
         // Unparent the particles from the shell.
         explosionParticleSystem.transform.parent = null;
 

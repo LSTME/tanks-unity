@@ -8,12 +8,16 @@ public class ArmedMine : MonoBehaviour
     public float explosionRadius = 5.0f;
     public float explosionForce = 1000.0f;
     public float explosionDamage = 50.0f;
+    public ParticleSystem explosionParticleSystem;
+    private AudioSource explosionAudio;
+    
     public LayerMask triggerMask;
     public bool isActive = false;
 
     private void Awake()
     {
         GetComponent<SphereCollider>().radius = triggerRadius;
+        explosionAudio = explosionParticleSystem.GetComponent<AudioSource>();
 
         StartCoroutine(ActivateMine());
     }
@@ -60,6 +64,19 @@ public class ArmedMine : MonoBehaviour
             // Deal this damage to the tank.
             targetHealth.TakeDamage(explosionDamage);
         }
+        
+        // Unparent the particles from the shell.
+        explosionParticleSystem.transform.parent = null;
+
+        // Play the particle system.
+        explosionParticleSystem.Play();
+
+        // Play the explosion sound effect.
+        explosionAudio.Play();
+
+        // Once the particles have finished, destroy the gameobject they are on.
+        ParticleSystem.MainModule mainModule = explosionParticleSystem.main;
+        Destroy(explosionParticleSystem.gameObject, mainModule.duration);
 
         // Destroy the shell.
         Destroy(gameObject);

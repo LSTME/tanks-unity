@@ -54,5 +54,6 @@ public class Pickup : MonoBehaviour
 public enum PickupType
 {
     AMMO,
-    SHIELD
+    SHIELD,
+    MINES
 }

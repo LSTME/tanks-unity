@@ -9,6 +9,7 @@ public class TankManager : MonoBehaviour
     [HideInInspector] public string m_ColoredPlayerText;
     [HideInInspector] public int m_Wins;
     public int ammo = 5;
+    public int mines = 0;
 
     private TankMovement m_Movement;       
     private TankShooting m_Shooting;
@@ -62,14 +63,24 @@ public class TankManager : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public bool CanShoot()
+    public bool CanShootCanon()
     {
         return ammo > 0;
     }
+    
+    public bool CanPlantMine()
+    {
+        return mines > 0;
+    }
 
-    public void OnFire()
+    public void OnCanonFired()
     {
         ammo--;
+    }
+    
+    public void OnMinePlanted()
+    {
+        mines--;
     }
 
     public bool pickup(PickupType pickupType)
@@ -81,6 +92,9 @@ public class TankManager : MonoBehaviour
                 return true;
             case PickupType.SHIELD:
                 return GetComponent<TankHealth>().activateShield();
+            case PickupType.MINES:
+                mines += 3;
+                return true;
         }
 
         return false;

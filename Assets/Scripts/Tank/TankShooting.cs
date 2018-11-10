@@ -22,9 +22,12 @@ public class TankShooting : MonoBehaviour
     public float m_MaxChargeTime = 0.75f; // How long the shell can charge for before it is fired at max force.
 
     private string m_FireButton; // The input axis that is used for launching shells.
+    private string m_AltFireButton; // The input axis that is used for launching shells.
     private float m_CurrentLaunchForce; // The force that will be given to the shell when the fire button is released.
     private float m_ChargeSpeed; // How fast the launch force increases, based on the max charge time.
     private bool m_Fired; // Whether or not the shell has been launched with this button press.
+
+    public GameObject armedMinePrefab;
 
     private TankManager tankManager;
 
@@ -45,6 +48,7 @@ public class TankShooting : MonoBehaviour
     {
         // The fire axis is based on the player number.
         m_FireButton = "Fire" + m_PlayerNumber;
+        m_AltFireButton = "AltFire" + m_PlayerNumber;
 
         // The rate that the launch force charges up is the range of possible forces by the max charge time.
         m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
@@ -56,7 +60,13 @@ public class TankShooting : MonoBehaviour
         // The slider should have a default value of the minimum launch force.
         m_AimSlider.value = m_MinLaunchForce;
 
-        if (!tankManager.CanShoot())
+        FireCanon();
+        PlantMine();
+    }
+
+    private void FireCanon()
+    {
+        if (!tankManager.CanShootCanon())
             return;
 
         // If the max force has been exceeded and the shell hasn't yet been launched...
@@ -68,7 +78,7 @@ public class TankShooting : MonoBehaviour
         }
         // Otherwise, if the fire button has just started being pressed...
         else if (Input.GetButtonDown(m_FireButton))
-        {            
+        {
             // ... reset the fired flag and reset the launch force.
             m_Fired = false;
             m_CurrentLaunchForce = m_MinLaunchForce;
@@ -93,6 +103,20 @@ public class TankShooting : MonoBehaviour
         }
     }
 
+    private void PlantMine()
+    {
+        if (!tankManager.CanPlantMine())
+            return;
+
+        if (Input.GetButtonDown(m_AltFireButton))
+            DropMine();
+    }
+
+    private void DropMine()
+    {
+        Instantiate(armedMinePrefab, transform.position, transform.rotation);
+        tankManager.OnMinePlanted();
+    }
 
     private void Fire()
     {
@@ -113,6 +137,6 @@ public class TankShooting : MonoBehaviour
         // Reset the launch force.  This is a precaution in case of missing button events.
         m_CurrentLaunchForce = m_MinLaunchForce;
         
-        tankManager.OnFire();
+        tankManager.OnCanonFired();
     }
 }

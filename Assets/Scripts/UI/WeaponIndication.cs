@@ -23,7 +23,7 @@ public class WeaponIndication : MonoBehaviour
 
         var stringBuilder = new StringBuilder();
         foreach (var tankManager in gameManager.m_Tanks)
-            stringBuilder.AppendLine(tankManager.m_ColoredPlayerText + " A " + tankManager.ammo);
+            stringBuilder.AppendLine(tankManager.m_ColoredPlayerText + " A" + tankManager.ammo + " M" + tankManager.mines);
         weaponText.text = stringBuilder.ToString();
     }
 }

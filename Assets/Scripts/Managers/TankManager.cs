@@ -71,4 +71,14 @@ public class TankManager : MonoBehaviour
     {
         ammo--;
     }
+
+    public void Pickup(PickupType pickupType)
+    {
+        switch (pickupType)
+        {
+            case PickupType.AMMO:
+                ammo += 5;
+                break;
+        }
+    }
 }

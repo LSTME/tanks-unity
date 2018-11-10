@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class TankShooting : MonoBehaviour
 {
+    public TankManager tankManager;
     public int m_PlayerNumber = 1; // Used to identify the different players.
     public Rigidbody m_Shell; // Prefab of the shell.
     public Transform m_FireTransform; // A child of the tank where the shells are spawned.
@@ -19,8 +20,6 @@ public class TankShooting : MonoBehaviour
         m_MaxLaunchForce = 30f; // The force given to the shell if the fire button is held for the max charge time.
 
     public float m_MaxChargeTime = 0.75f; // How long the shell can charge for before it is fired at max force.
-
-    public int Ammo = 5;
 
     private string m_FireButton; // The input axis that is used for launching shells.
     private float m_CurrentLaunchForce; // The force that will be given to the shell when the fire button is released.
@@ -51,11 +50,9 @@ public class TankShooting : MonoBehaviour
         // The slider should have a default value of the minimum launch force.
         m_AimSlider.value = m_MinLaunchForce;
 
-        
-        // Shooting
-        if (Ammo <= 0)
+        if (!tankManager.CanShoot())
             return;
-        
+
         // If the max force has been exceeded and the shell hasn't yet been launched...
         if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
         {
@@ -109,7 +106,7 @@ public class TankShooting : MonoBehaviour
 
         // Reset the launch force.  This is a precaution in case of missing button events.
         m_CurrentLaunchForce = m_MinLaunchForce;
-
-        Ammo--;
+        
+        tankManager.OnFire();
     }
 }

@@ -9,8 +9,8 @@ public class TankManager
     [HideInInspector] public int m_PlayerNumber;             
     [HideInInspector] public string m_ColoredPlayerText;
     [HideInInspector] public GameObject m_Instance;          
-    [HideInInspector] public int m_Wins;                     
-
+    [HideInInspector] public int m_Wins;
+    public int ammo = 5;
 
     private TankMovement m_Movement;       
     private TankShooting m_Shooting;
@@ -25,6 +25,7 @@ public class TankManager
 
         m_Movement.m_PlayerNumber = m_PlayerNumber;
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
+        m_Shooting.tankManager = this;
 
         m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
 
@@ -62,5 +63,15 @@ public class TankManager
 
         m_Instance.SetActive(false);
         m_Instance.SetActive(true);
+    }
+
+    public bool CanShoot()
+    {
+        return ammo > 0;
+    }
+
+    public void OnFire()
+    {
+        ammo--;
     }
 }

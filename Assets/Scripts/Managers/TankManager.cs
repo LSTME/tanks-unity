@@ -1,102 +1,105 @@
 ﻿using System;
+using Pickups;
+using Tank;
 using UnityEngine;
 
-public class TankManager : MonoBehaviour
+namespace Managers
 {
-    public Color m_PlayerColor;            
-    public Transform m_SpawnPoint;
-    [HideInInspector] public int m_PlayerNumber;             
-    [HideInInspector] public string m_ColoredPlayerText;
-    [HideInInspector] public int m_Wins;
-    public int ammo = 5;
-    public int mines = 0;
-
-    private TankMovement m_Movement;       
-    private TankShooting m_Shooting;
-    private GameObject m_CanvasGameObject;
-
-
-    public void Setup()
+    [RequireComponent(typeof(TankMovement), typeof(TankShooting))]
+    public class TankManager : MonoBehaviour
     {
-        m_Movement = GetComponent<TankMovement>();
-        m_Shooting = GetComponent<TankShooting>();
-        m_CanvasGameObject = GetComponentInChildren<Canvas>().gameObject;
+        public Color playerColor;
+        public Transform spawnPoint;
+        public int playerNumber;
+        public string coloredPlayerText;
+        public int wins;
+        public int ammo = 5;
+        public int mines;
 
-        m_Movement.m_PlayerNumber = m_PlayerNumber;
-        m_Shooting.m_PlayerNumber = m_PlayerNumber;
+        private TankMovement movement;
+        private TankShooting shooting;
+        private GameObject canvasGameObject;
 
-        m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
 
-        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
-
-        for (int i = 0; i < renderers.Length; i++)
+        public void Setup()
         {
-            renderers[i].material.color = m_PlayerColor;
-        }
-    }
+            movement = GetComponent<TankMovement>();
+            shooting = GetComponent<TankShooting>();
+            canvasGameObject = GetComponentInChildren<Canvas>().gameObject;
 
+            movement.playerNumber = playerNumber;
+            shooting.playerNumber = playerNumber;
 
-    public void DisableControl()
-    {
-        m_Movement.enabled = false;
-        m_Shooting.enabled = false;
+            coloredPlayerText = string.Format("<color=#{0}>PLAYER {1}</color>", ColorUtility.ToHtmlStringRGB(playerColor), playerNumber);
 
-        m_CanvasGameObject.SetActive(false);
-    }
+            var renderers = GetComponentsInChildren<MeshRenderer>();
 
-
-    public void EnableControl()
-    {
-        m_Movement.enabled = true;
-        m_Shooting.enabled = true;
-
-        m_CanvasGameObject.SetActive(true);
-    }
-
-
-    public void Reset()
-    {
-        transform.position = m_SpawnPoint.position;
-        transform.rotation = m_SpawnPoint.rotation;
-
-        gameObject.SetActive(false);
-        gameObject.SetActive(true);
-    }
-
-    public bool CanShootCanon()
-    {
-        return ammo > 0;
-    }
-    
-    public bool CanPlantMine()
-    {
-        return mines > 0;
-    }
-
-    public void OnCanonFired()
-    {
-        ammo--;
-    }
-    
-    public void OnMinePlanted()
-    {
-        mines--;
-    }
-
-    public bool pickup(PickupType pickupType)
-    {
-        switch (pickupType)
-        {
-            case PickupType.AMMO:
-                ammo += 5;
-                return true;
-            case PickupType.SHIELD:
-                return GetComponent<TankHealth>().activateShield();
-            case PickupType.MINES:
-                mines += 3;
-                return true;
+            foreach (var tankRenderer in renderers)
+            {
+                tankRenderer.material.color = playerColor;
+            }
         }
 
-        return false;
+        public void DisableControl()
+        {
+            movement.enabled = false;
+            shooting.enabled = false;
+
+            canvasGameObject.SetActive(false);
+        }
+
+        public void EnableControl()
+        {
+            movement.enabled = true;
+            shooting.enabled = true;
+
+            canvasGameObject.SetActive(true);
+        }
+
+        public void Reset()
+        {
+            transform.position = spawnPoint.position;
+            transform.rotation = spawnPoint.rotation;
+
+            gameObject.SetActive(false);
+            gameObject.SetActive(true);
+        }
+
+        public bool CanShootCanon()
+        {
+            return ammo > 0;
+        }
+
+        public bool CanPlantMine()
+        {
+            return mines > 0;
+        }
+
+        public void OnCanonFired()
+        {
+            ammo--;
+        }
+
+        public void OnMinePlanted()
+        {
+            mines--;
+        }
+
+        public bool Pickup(PickupType pickupType)
+        {
+            switch (pickupType)
+            {
+                case PickupType.Ammo:
+                    ammo += 5;
+                    return true;
+                case PickupType.Shield:
+                    return GetComponent<TankHealth>().activateShield();
+                case PickupType.Mines:
+                    mines += 3;
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException("pickupType", pickupType, null);
+            }
+        }
     }
 }

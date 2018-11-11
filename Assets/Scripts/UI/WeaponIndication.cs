@@ -1,29 +1,33 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponIndication : MonoBehaviour
+namespace UI
 {
-    public GameManager gameManager;
-    public Text weaponText;
-
-    void Start()
+    public class WeaponIndication : MonoBehaviour
     {
-        weaponText.text = string.Empty;
-    }
+        public GameManager gameManager;
+        public Text weaponText;
 
-    void Update()
-    {
-        if (gameManager.RoundStatus != RoundStatus.Playing)
+        private void Start()
         {
             weaponText.text = string.Empty;
-            return;
         }
 
-        var stringBuilder = new StringBuilder();
-        foreach (var tankManager in gameManager.m_Tanks)
-            stringBuilder.AppendLine(tankManager.m_ColoredPlayerText + " A" + tankManager.ammo + " M" + tankManager.mines);
-        weaponText.text = stringBuilder.ToString();
+        private void Update()
+        {
+            if (gameManager.RoundStatus != RoundStatus.Playing)
+            {
+                weaponText.text = string.Empty;
+                return;
+            }
+
+            var stringBuilder = new StringBuilder();
+            foreach (var tankManager in gameManager.tankManagers)
+                stringBuilder.AppendFormat("{0} A{1} M{2}", tankManager.coloredPlayerText, tankManager.ammo, tankManager.mines);
+
+            weaponText.text = stringBuilder.ToString();
+        }
     }
 }

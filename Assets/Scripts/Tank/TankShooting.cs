@@ -1,142 +1,142 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(TankManager))]
-public class TankShooting : MonoBehaviour
+namespace Tank
 {
-    public int m_PlayerNumber = 1; // Used to identify the different players.
-    public Rigidbody m_Shell; // Prefab of the shell.
-    public Transform m_FireTransform; // A child of the tank where the shells are spawned.
-    public Slider m_AimSlider; // A child of the tank that displays the current launch force.
-
-    public AudioSource
-        m_ShootingAudio; // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
-
-    public AudioClip m_ChargingClip; // Audio that plays when each shot is charging up.
-    public AudioClip m_FireClip; // Audio that plays when each shot is fired.
-    public float m_MinLaunchForce = 15f; // The force given to the shell if the fire button is not held.
-
-    public float
-        m_MaxLaunchForce = 30f; // The force given to the shell if the fire button is held for the max charge time.
-
-    public float m_MaxChargeTime = 0.75f; // How long the shell can charge for before it is fired at max force.
-
-    private string m_FireButton; // The input axis that is used for launching shells.
-    private string m_AltFireButton; // The input axis that is used for launching shells.
-    private float m_CurrentLaunchForce; // The force that will be given to the shell when the fire button is released.
-    private float m_ChargeSpeed; // How fast the launch force increases, based on the max charge time.
-    private bool m_Fired; // Whether or not the shell has been launched with this button press.
-
-    public GameObject armedMinePrefab;
-
-    private TankManager tankManager;
-
-    private void Awake()
+    [RequireComponent(typeof(TankManager))]
+    public class TankShooting : MonoBehaviour
     {
-        tankManager = GetComponent<TankManager>();
-    }
+        public int playerNumber = 1; // Used to identify the different players.
 
-    private void OnEnable()
-    {
-        // When the tank is turned on, reset the launch force and the UI
-        m_CurrentLaunchForce = m_MinLaunchForce;
-        m_AimSlider.value = m_MinLaunchForce;
-    }
+        public GameObject shellPrefab; // Prefab of the shell.
+        public GameObject armedMinePrefab;
 
+        public Transform fireTransform; // A child of the tank where the shells are spawned.
+        public Slider aimSlider; // A child of the tank that displays the current launch force.
 
-    private void Start()
-    {
-        // The fire axis is based on the player number.
-        m_FireButton = "Fire" + m_PlayerNumber;
-        m_AltFireButton = "AltFire" + m_PlayerNumber;
+        public AudioSource shootingAudio; // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
 
-        // The rate that the launch force charges up is the range of possible forces by the max charge time.
-        m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
-    }
+        public AudioClip chargingClip; // Audio that plays when each shot is charging up.
+        public AudioClip fireClip; // Audio that plays when each shot is fired.
 
+        public float minLaunchForce = 5.0f; // The force given to the shell if the fire button is not held.
+        public float maxLaunchForce = 30.0f; // The force given to the shell if the fire button is held for the max charge time.
 
-    private void Update()
-    {
-        // The slider should have a default value of the minimum launch force.
-        m_AimSlider.value = m_MinLaunchForce;
+        public float maxChargeTime = 0.75f; // How long the shell can charge for before it is fired at max force.
 
-        FireCanon();
-        PlantMine();
-    }
+        private string fireButton; // The input axis that is used for launching shells.
+        private string altFireButton; // The input axis that is used for launching shells.
+        private float currentLaunchForce; // The force that will be given to the shell when the fire button is released.
+        private float chargeSpeed; // How fast the launch force increases, based on the max charge time.
+        private bool fired; // Whether or not the shell has been launched with this button press.
 
-    private void FireCanon()
-    {
-        if (!tankManager.CanShootCanon())
-            return;
+        private TankManager tankManager;
 
-        // If the max force has been exceeded and the shell hasn't yet been launched...
-        if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
+        private void Awake()
         {
-            // ... use the max force and launch the shell.
-            m_CurrentLaunchForce = m_MaxLaunchForce;
-            Fire();
+            tankManager = GetComponent<TankManager>();
         }
-        // Otherwise, if the fire button has just started being pressed...
-        else if (Input.GetButtonDown(m_FireButton))
+
+        private void OnEnable()
         {
-            // ... reset the fired flag and reset the launch force.
-            m_Fired = false;
-            m_CurrentLaunchForce = m_MinLaunchForce;
-
-            // Change the clip to the charging clip and start it playing.
-            m_ShootingAudio.clip = m_ChargingClip;
-            m_ShootingAudio.Play();
+            // When the tank is turned on, reset the launch force and the UI
+            currentLaunchForce = minLaunchForce;
+            aimSlider.value = minLaunchForce;
         }
-        // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
-        else if (Input.GetButton(m_FireButton) && !m_Fired)
+
+        private void Start()
         {
-            // Increment the launch force and update the slider.
-            m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+            // The fire axis is based on the player number.
+            fireButton = string.Format("Fire{0}", playerNumber);
+            altFireButton = string.Format("AltFire{0}", playerNumber);
 
-            m_AimSlider.value = m_CurrentLaunchForce;
+            // The rate that the launch force charges up is the range of possible forces by the max charge time.
+            chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime;
         }
-        // Otherwise, if the fire button is released and the shell hasn't been launched yet...
-        else if (Input.GetButtonUp(m_FireButton) && !m_Fired)
+
+        private void Update()
         {
-            // ... launch the shell.
-            Fire();
+            // The slider should have a default value of the minimum launch force.
+            aimSlider.value = minLaunchForce;
+
+            FireCanon();
+            PlantMine();
         }
-    }
 
-    private void PlantMine()
-    {
-        if (!tankManager.CanPlantMine())
-            return;
+        private void FireCanon()
+        {
+            if (!tankManager.CanShootCanon())
+                return;
 
-        if (Input.GetButtonDown(m_AltFireButton))
-            DropMine();
-    }
+            // If the max force has been exceeded and the shell hasn't yet been launched...
+            if (currentLaunchForce >= maxLaunchForce && !fired)
+            {
+                // ... use the max force and launch the shell.
+                currentLaunchForce = maxLaunchForce;
+                Fire();
+            }
+            // Otherwise, if the fire button has just started being pressed...
+            else if (Input.GetButtonDown(fireButton))
+            {
+                // ... reset the fired flag and reset the launch force.
+                fired = false;
+                currentLaunchForce = minLaunchForce;
 
-    private void DropMine()
-    {
-        Instantiate(armedMinePrefab, transform.position, transform.rotation);
-        tankManager.OnMinePlanted();
-    }
+                // Change the clip to the charging clip and start it playing.
+                shootingAudio.clip = chargingClip;
+                shootingAudio.Play();
+            }
+            // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
+            else if (Input.GetButton(fireButton) && !fired)
+            {
+                // Increment the launch force and update the slider.
+                currentLaunchForce += chargeSpeed * Time.deltaTime;
 
-    private void Fire()
-    {
-        // Set the fired flag so only Fire is only called once.
-        m_Fired = true;
+                aimSlider.value = currentLaunchForce;
+            }
+            // Otherwise, if the fire button is released and the shell hasn't been launched yet...
+            else if (Input.GetButtonUp(fireButton) && !fired)
+            {
+                // ... launch the shell.
+                Fire();
+            }
+        }
 
-        // Create an instance of the shell and store a reference to it's rigidbody.
-        Rigidbody shellInstance =
-            Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+        private void PlantMine()
+        {
+            if (!tankManager.CanPlantMine())
+                return;
 
-        // Set the shell's velocity to the launch force in the fire position's forward direction.
-        shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+            if (Input.GetButtonDown(altFireButton))
+                DropMine();
+        }
 
-        // Change the clip to the firing clip and play it.
-        m_ShootingAudio.clip = m_FireClip;
-        m_ShootingAudio.Play();
+        private void DropMine()
+        {
+            Instantiate(armedMinePrefab, transform.position, transform.rotation);
+            tankManager.OnMinePlanted();
+        }
 
-        // Reset the launch force.  This is a precaution in case of missing button events.
-        m_CurrentLaunchForce = m_MinLaunchForce;
-        
-        tankManager.OnCanonFired();
+        private void Fire()
+        {
+            // Set the fired flag so only Fire is only called once.
+            fired = true;
+
+            // Create an instance of the shell and store a reference to it's rigidbody.
+            var shellInstance = Instantiate(shellPrefab, fireTransform.position, fireTransform.rotation);
+
+            // Set the shell's velocity to the launch force in the fire position's forward direction.
+            shellInstance.GetComponent<Rigidbody>().velocity = currentLaunchForce * fireTransform.forward;
+
+            // Change the clip to the firing clip and play it.
+            shootingAudio.clip = fireClip;
+            shootingAudio.Play();
+
+            // Reset the launch force.  This is a precaution in case of missing button events.
+            currentLaunchForce = minLaunchForce;
+
+            tankManager.OnCanonFired();
+        }
     }
 }

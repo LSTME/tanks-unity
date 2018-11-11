@@ -1,25 +1,24 @@
 using UnityEngine;
 
-public class UIDirectionControl : MonoBehaviour
+namespace UI
 {
-    // This class is used to make sure world space UI
-    // elements such as the health bar face the correct direction.
-
-    public bool m_UseRelativeRotation = true; // Use relative rotation should be used for this gameobject?
-
-
-    private Quaternion m_RelativeRotation; // The local rotatation at the start of the scene.
-
-
-    private void Start()
+    public class UIDirectionControl : MonoBehaviour
     {
-        m_RelativeRotation = transform.parent.localRotation;
-    }
+        // This class is used to make sure world space UI
+        // elements such as the health bar face the correct direction.
 
+        public bool useRelativeRotation = true; // Use relative rotation should be used for this gameobject?
+        private Quaternion relativeRotation; // The local rotatation at the start of the scene.
 
-    private void Update()
-    {
-        if (m_UseRelativeRotation)
-            transform.rotation = m_RelativeRotation;
+        private void Start()
+        {
+            relativeRotation = transform.parent.localRotation;
+        }
+
+        private void Update()
+        {
+            if (useRelativeRotation)
+                transform.rotation = relativeRotation;
+        }
     }
 }

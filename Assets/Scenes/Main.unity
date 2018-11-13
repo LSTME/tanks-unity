@@ -1525,7 +1525,7 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   numRoundsToWin: 5
-  startDelay: 3
+  startDelay: 1
   endDelay: 3
   cameraControl: {fileID: 2006918570}
   messageText: {fileID: 1644825248}

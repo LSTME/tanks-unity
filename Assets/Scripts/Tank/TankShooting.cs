@@ -127,7 +127,7 @@ namespace Tank
             var shellInstance = Instantiate(shellPrefab, fireTransform.position, fireTransform.rotation);
 
             // Set the shell's velocity to the launch force in the fire position's forward direction.
-            shellInstance.GetComponent<Rigidbody>().velocity = currentLaunchForce * fireTransform.forward;
+            shellInstance.GetComponent<Rigidbody>().AddForce(fireTransform.forward * currentLaunchForce, ForceMode.Impulse);
 
             // Change the clip to the firing clip and play it.
             shootingAudio.clip = fireClip;

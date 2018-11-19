@@ -20,20 +20,8 @@ namespace Areas
 
         private IEnumerator Heal()
         {
-            while (true)
-            {
-                var colliders = Physics.OverlapSphere(transform.position, radius, targetMask);
-                foreach (var targetCollider in colliders)
-                {
-                    var tankHealth = targetCollider.GetComponent<TankHealth>();
-                    tankHealth.Heal(healingPower);
-                }
-
-                if (colliders.Length > 0)
-                    burstParticleSystem.Emit(20);
-
-                yield return new WaitForSeconds(1.0f);
-            }
+            // TODO: heal players around
+            return null;
         }
 
         private void OnDrawGizmos()

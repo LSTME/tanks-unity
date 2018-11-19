@@ -13,8 +13,8 @@ namespace Managers
         public int playerNumber;
         public string coloredPlayerText;
         public int wins;
-        public int ammo = 5;
-        public int mines;
+
+        // TODO: add weapon counters
 
         private TankMovement movement;
         private TankShooting shooting;
@@ -56,6 +56,8 @@ namespace Managers
             canvasGameObject.SetActive(true);
         }
 
+        // TODO: implement canShootXXX and events
+
         public void Reset()
         {
             transform.position = spawnPoint.position;
@@ -65,41 +67,10 @@ namespace Managers
             gameObject.SetActive(true);
         }
 
-        public bool CanShootCanon()
-        {
-            return ammo > 0;
-        }
-
-        public bool CanPlantMine()
-        {
-            return mines > 0;
-        }
-
-        public void OnCanonFired()
-        {
-            ammo--;
-        }
-
-        public void OnMinePlanted()
-        {
-            mines--;
-        }
-
         public bool Pickup(PickupType pickupType)
         {
-            switch (pickupType)
-            {
-                case PickupType.Ammo:
-                    ammo += 5;
-                    return true;
-                case PickupType.Shield:
-                    return GetComponent<TankHealth>().ActivateShield();
-                case PickupType.Mines:
-                    mines += 3;
-                    return true;
-                default:
-                    throw new ArgumentOutOfRangeException("pickupType", pickupType, null);
-            }
+            // TODO: handle item pickup for all types
+            return true;
         }
     }
 }

@@ -66,8 +66,7 @@ namespace Tank
 
         private void HandleFireCanon()
         {
-            if (!tankManager.CanShootCanon())
-                return;
+            // TODO: can shoot?
 
             // If the max force has been exceeded and the shell hasn't yet been launched...
             if (currentLaunchForce >= maxLaunchForce && !fired)
@@ -105,8 +104,7 @@ namespace Tank
 
         private void HandlePlantMine()
         {
-            if (!tankManager.CanPlantMine())
-                return;
+            // TODO: can plant mine?
 
             if (Input.GetButtonDown(altFireButton))
                 PlantMine();
@@ -130,13 +128,14 @@ namespace Tank
             // Reset the launch force.  This is a precaution in case of missing button events.
             currentLaunchForce = minLaunchForce;
 
-            tankManager.OnCanonFired();
+            // TODO: tell tank manager that we shot canon
         }
 
         private void PlantMine()
         {
             Instantiate(armedMinePrefab, transform.position, transform.rotation);
-            tankManager.OnMinePlanted();
+
+            // TODO: tell tank manager that we have planted mine
         }
     }
 }

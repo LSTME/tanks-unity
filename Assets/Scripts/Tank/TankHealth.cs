@@ -44,29 +44,9 @@ namespace Tank
             UpdateHealthUI();
         }
 
-        public bool ActivateShield()
-        {
-            if (isShieldUp)
-                return false;
+        // TODO: shield
 
-            StartCoroutine(Shielding());
-
-            return true;
-        }
-
-        private IEnumerator Shielding()
-        {
-            shield.SetActive(true);
-            isShieldUp = true;
-            yield return new WaitForSeconds(5.0f);
-            shield.SetActive(false);
-            isShieldUp = false;
-        }
-
-        public void Heal(float amount)
-        {
-            ChangeHealth(amount);
-        }
+        // TODO: healing
 
         private void ChangeHealth(float amount)
         {

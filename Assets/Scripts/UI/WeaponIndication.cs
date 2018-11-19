@@ -23,14 +23,7 @@ namespace UI
                 return;
             }
 
-            var stringBuilder = new StringBuilder();
-            foreach (var tankManager in gameManager.tankManagers)
-            {
-                stringBuilder.AppendFormat("{0} A{1} M{2}", tankManager.coloredPlayerText, tankManager.ammo, tankManager.mines);
-                stringBuilder.AppendLine();
-            }
-
-            weaponText.text = stringBuilder.ToString();
+            // TODO: print tank status
         }
     }
 }

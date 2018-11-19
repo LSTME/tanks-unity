@@ -93,7 +93,7 @@ namespace Managers
                     ammo += 5;
                     return true;
                 case PickupType.Shield:
-                    return GetComponent<TankHealth>().activateShield();
+                    return GetComponent<TankHealth>().ActivateShield();
                 case PickupType.Mines:
                     mines += 3;
                     return true;

@@ -34,15 +34,6 @@ namespace Tank
             explosionParticleSystem.gameObject.SetActive(false);
         }
 
-        private IEnumerator Shielding()
-        {
-            shield.SetActive(true);
-            isShieldUp = true;
-            yield return new WaitForSeconds(5.0f);
-            shield.SetActive(false);
-            isShieldUp = false;
-        }
-
         private void OnEnable()
         {
             // When the tank is enabled, reset the tank's health and whether or not it's dead.
@@ -53,7 +44,7 @@ namespace Tank
             UpdateHealthUI();
         }
 
-        public bool activateShield()
+        public bool ActivateShield()
         {
             if (isShieldUp)
                 return false;
@@ -61,6 +52,15 @@ namespace Tank
             StartCoroutine(Shielding());
 
             return true;
+        }
+
+        private IEnumerator Shielding()
+        {
+            shield.SetActive(true);
+            isShieldUp = true;
+            yield return new WaitForSeconds(5.0f);
+            shield.SetActive(false);
+            isShieldUp = false;
         }
 
         public void Heal(float amount)

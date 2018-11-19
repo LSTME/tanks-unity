@@ -60,11 +60,11 @@ namespace Tank
             // The slider should have a default value of the minimum launch force.
             aimSlider.value = minLaunchForce;
 
-            FireCanon();
-            PlantMine();
+            HandleFireCanon();
+            HandlePlantMine();
         }
 
-        private void FireCanon()
+        private void HandleFireCanon()
         {
             if (!tankManager.CanShootCanon())
                 return;
@@ -74,7 +74,7 @@ namespace Tank
             {
                 // ... use the max force and launch the shell.
                 currentLaunchForce = maxLaunchForce;
-                Fire();
+                FireCanon();
             }
             // Otherwise, if the fire button has just started being pressed...
             else if (Input.GetButtonDown(fireButton))
@@ -99,26 +99,20 @@ namespace Tank
             else if (Input.GetButtonUp(fireButton) && !fired)
             {
                 // ... launch the shell.
-                Fire();
+                FireCanon();
             }
         }
 
-        private void PlantMine()
+        private void HandlePlantMine()
         {
             if (!tankManager.CanPlantMine())
                 return;
 
             if (Input.GetButtonDown(altFireButton))
-                DropMine();
+                PlantMine();
         }
 
-        private void DropMine()
-        {
-            Instantiate(armedMinePrefab, transform.position, transform.rotation);
-            tankManager.OnMinePlanted();
-        }
-
-        private void Fire()
+        private void FireCanon()
         {
             // Set the fired flag so only Fire is only called once.
             fired = true;
@@ -137,6 +131,12 @@ namespace Tank
             currentLaunchForce = minLaunchForce;
 
             tankManager.OnCanonFired();
+        }
+
+        private void PlantMine()
+        {
+            Instantiate(armedMinePrefab, transform.position, transform.rotation);
+            tankManager.OnMinePlanted();
         }
     }
 }

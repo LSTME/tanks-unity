@@ -1,6 +1,7 @@
 ﻿using Managers;
 using UnityEngine;
 using UnityEngine.UI;
+using Weapons;
 
 namespace Tank
 {
@@ -11,8 +12,10 @@ namespace Tank
 
         public GameObject shellPrefab; // Prefab of the shell.
         public GameObject armedMinePrefab;
+        public GameObject rocketPrefab;
 
         public Transform fireTransform; // A child of the tank where the shells are spawned.
+        public Transform launchTransform; // A child of the tank where the shells are spawned.
         public Slider aimSlider; // A child of the tank that displays the current launch force.
 
         public AudioSource shootingAudio; // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
@@ -62,6 +65,7 @@ namespace Tank
 
             HandleFireCanon();
             HandlePlantMine();
+            HandleLaunchRocket();
         }
 
         private void HandleFireCanon()
@@ -112,6 +116,15 @@ namespace Tank
                 PlantMine();
         }
 
+        private void HandleLaunchRocket()
+        {
+//            if (!tankManager.CanLaunchRocket())
+//                return;
+
+            if (Input.GetKeyDown(KeyCode.F))
+                LaunchRocket();
+        }
+
         private void FireCanon()
         {
             // Set the fired flag so only Fire is only called once.
@@ -137,6 +150,19 @@ namespace Tank
         {
             Instantiate(armedMinePrefab, transform.position, transform.rotation);
             tankManager.OnMinePlanted();
+        }
+
+        private void LaunchRocket()
+        {
+            if (tankManager.playerNumber != 1)
+                return;
+
+            foreach (var tankManagerOpponent in tankManager.opponents)
+            {
+                var rocket = Instantiate(rocketPrefab, launchTransform.position, launchTransform.rotation);
+                rocket.GetComponent<Rocket>().Launch(tankManagerOpponent.transform.position);
+//            tankManager.OnMinePlanted();
+            }
         }
     }
 }

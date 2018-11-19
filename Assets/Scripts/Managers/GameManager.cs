@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Camera;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,17 @@ namespace Managers
                 tankManager.Setup();
 
                 tankManagers[i] = tankManager;
+            }
+
+            foreach (var tankManager in tankManagers)
+            {
+                var opponents = new List<TankManager>(tankManagers.Length - 1);
+
+                foreach (var tankManagerOpponent in tankManagers)
+                    if (tankManagerOpponent != tankManager)
+                        opponents.Add(tankManagerOpponent);
+
+                tankManager.opponents = opponents;
             }
         }
 

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RocketClimbTarget
   layers:
   - Default
   - TransparentFX

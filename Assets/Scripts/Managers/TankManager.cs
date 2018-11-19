@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Pickups;
 using Tank;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Managers
         public int wins;
         public int ammo = 5;
         public int mines;
+
+        public List<TankManager> opponents = new List<TankManager>(0);
 
         private TankMovement movement;
         private TankShooting shooting;

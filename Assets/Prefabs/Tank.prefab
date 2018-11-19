@@ -11,6 +11,21 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1717921642389702}
   m_IsPrefabAsset: 1
+--- !u!1 &1016709607193654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4954391878717048}
+  m_Layer: 9
+  m_Name: FireTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1017931794415744
 GameObject:
   m_ObjectHideFlags: 0
@@ -37,7 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4641716277497806}
   m_Layer: 9
-  m_Name: FireTransform
+  m_Name: LaunchTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,7 +441,7 @@ Transform:
   m_Children:
   - {fileID: 4668703428871302}
   m_Father: {fileID: 4569383315529454}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4569383315529454
 Transform:
@@ -435,13 +450,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1717921642389702}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.927583, y: 0, z: 1.0866656}
+  m_LocalPosition: {x: -29.575361, y: 0, z: -10.259514}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4418018724323890}
   - {fileID: 4853011926851108}
   - {fileID: 4248481725204038}
   - {fileID: 224436032362115136}
+  - {fileID: 4954391878717048}
   - {fileID: 4641716277497806}
   - {fileID: 4473315569698990}
   m_Father: {fileID: 0}
@@ -453,12 +469,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1040005765501148}
-  m_LocalRotation: {x: 0.08715596, y: -0, z: -0, w: -0.9961947}
-  m_LocalPosition: {x: 0, y: 1.7, z: 1.35}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.75, z: -1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4569383315529454}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 350, y: 0, z: 0}
 --- !u!4 &4668703428871302
 Transform:
@@ -500,6 +516,19 @@ Transform:
   m_Father: {fileID: 4418018724323890}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4954391878717048
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1016709607193654}
+  m_LocalRotation: {x: 0.08715596, y: -0, z: -0, w: -0.9961947}
+  m_LocalPosition: {x: 0, y: 1.7, z: 1.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4569383315529454}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 350, y: 0, z: 0}
 --- !u!4 &4970557310988352
 Transform:
   m_ObjectHideFlags: 1
@@ -1025,6 +1054,7 @@ MonoBehaviour:
   wins: 0
   ammo: 5
   mines: 0
+  opponents: []
 --- !u!114 &114291512559283816
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1059,7 +1089,10 @@ MonoBehaviour:
     type: 2}
   armedMinePrefab: {fileID: 1212800388286922, guid: 124322458a32f4e219d022e6944cbd42,
     type: 2}
-  fireTransform: {fileID: 4641716277497806}
+  rocketPrefab: {fileID: 1880480049279950, guid: f47c45f16159b43369138d3ec9cc2f14,
+    type: 2}
+  fireTransform: {fileID: 4954391878717048}
+  launchTransform: {fileID: 4641716277497806}
   aimSlider: {fileID: 114062726087108020}
   shootingAudio: {fileID: 82173826789319248}
   chargingClip: {fileID: 8300000, guid: c17f124fcdc0f5446a72f793898bd74b, type: 3}
